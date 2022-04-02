@@ -32,7 +32,7 @@ public class Valve : MonoBehaviour
 
                 angle += a1 - a0; // for right valve += a1 - a0;
                 angle = Mathf.Clamp(angle, 0, MaxAngle);
-
+                print(angle);
                 rotator.rotation = Quaternion.Euler(new Vector3(rotator.rotation.z, angle, rotator.rotation.z));
                 tube.SetCurrentValue(angle);
             }
@@ -46,14 +46,14 @@ public class Valve : MonoBehaviour
     private float AngleBetweenVector2(Vector2 vec1, Vector2 vec2)
     {
         Vector2 diference = vec2 - vec1;
-        return Vector2.Angle(Camera.main.transform.right, diference) ;
+        return Vector2.Angle(transform.right, diference);
     }
 
     private bool IsInWorkArea()
     {
         Transform camera = Camera.main.transform;
 
-        Vector3 camToValve = transform.position - camera.position;
+        Vector3 camToValve = rotator.position - camera.position;
         Vector3 camForward = camera.forward;
         var visible = Vector3.Dot(camToValve.normalized, camForward.normalized);
 
