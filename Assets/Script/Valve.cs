@@ -4,29 +4,23 @@ using UnityEngine;
 
 public class Valve : MonoBehaviour
 {
-    // Start is called before the first frame update
     public Transform rotator;
-    private Vector3 startDirection;
     public Light hightlight;
-    void Start()
-    {
-        startDirection = rotator.forward;
-    }
+    public Tube tube;
 
-    bool capchureVector = false;
-    Vector2 valveToMouseOrigin = Vector2.zero;
-    private Quaternion oldFingerRotation;
     Vector2 mousePosPrev;
     private float angle;
-    private float anglePrev;
 
     public float MaxAngle = 720;
-    public float AccumulateAngle;
-    public bool more = false;
-    // Update is called once per frame
+
+    void Start()
+    {
+        tube.SetMaxValue(MaxAngle);
+    }
+
     void Update()
     {
-        if (IsAllowRotate())
+        if (IsInWorkArea())
         {
             Vector2 valvePos = Camera.main.WorldToScreenPoint(rotator.transform.position);
             Vector2 mousePos = Input.mousePosition;
@@ -36,41 +30,26 @@ public class Valve : MonoBehaviour
                 float a0 = AngleBetweenVector2(valvePos, mousePosPrev);
                 float a1 = AngleBetweenVector2(valvePos, mousePos);
 
-                angle += a0 - a1; // for right valve += a1 - a0;
+                angle += a1 - a0; // for right valve += a1 - a0;
+                angle = Mathf.Clamp(angle, 0, MaxAngle);
 
-                if (AccumulateAngle != 0 && AccumulateAngle < MaxAngle)
-                {
-                    rotator.transform.rotation = Quaternion.Euler(0, angle, 0);
-                }
-
-                if (angle > anglePrev)
-                {
-                    AccumulateAngle += angle - anglePrev;
-                }
-                if (angle < anglePrev)
-                {
-                    AccumulateAngle -= angle - anglePrev;
-                }
-                    print(AccumulateAngle);
-                AccumulateAngle = Mathf.Clamp(AccumulateAngle, 0, MaxAngle);
+                rotator.rotation = Quaternion.Euler(new Vector3(rotator.rotation.z, angle, rotator.rotation.z));
+                tube.SetCurrentValue(angle);
             }
 
-            anglePrev = angle;
             mousePosPrev = mousePos;
         }
 
-        hightlight.enabled = IsAllowRotate();
+        hightlight.enabled = IsInWorkArea();
     }
 
     private float AngleBetweenVector2(Vector2 vec1, Vector2 vec2)
     {
         Vector2 diference = vec2 - vec1;
-        float sign = (vec2.y < vec1.y) ? -1.0f : 1.0f;
-        //print("valve: " + vec1.y + " mouse: " + vec2.y + " sign: " + sign + " rotator: " + rotator.eulerAngles);
-        return Vector2.Angle(transform.right, diference) * sign;
+        return Vector2.Angle(Camera.main.transform.right, diference) ;
     }
 
-    private bool IsAllowRotate()
+    private bool IsInWorkArea()
     {
         Transform camera = Camera.main.transform;
 
@@ -79,8 +58,7 @@ public class Valve : MonoBehaviour
         var visible = Vector3.Dot(camToValve.normalized, camForward.normalized);
 
         float distance = Vector3.SqrMagnitude(camToValve);
-
-        bool canRotate = distance < 37.0f && visible > 0.97f;
+        bool canRotate = distance < 6.0f && visible > 0.75f;
 
         return canRotate;
     }

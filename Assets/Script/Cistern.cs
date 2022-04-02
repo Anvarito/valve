@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Cistern : MonoBehaviour
 {
-    Vector3 waterColorAccumulator = Vector3.zero;
-
-    private float speedMod = 0.05f;
     private float wateYpos = 0;
     private float minYpos;
     private float maxYpos;

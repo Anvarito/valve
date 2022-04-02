@@ -6,21 +6,29 @@ public class Tube : MonoBehaviour
 {
     // Start is called before the first frame update
     public ParticleSystem tubeFlow;
+
     private Material material;
     private Color color;
 
-    public float maxValue = 0;
-    public float currentValve = 0;
-    public Valve valve;
+    private float maxValue = 0;
+    private float currentValve = 0;
 
-    private float alpha = 0;
-    private bool isStopFlow;
+    private float alphaPressure = 0;
 
     void Start()
     {
-        maxValue = valve.MaxAngle;
         material = tubeFlow.GetComponent<ParticleSystemRenderer>().material;
         color = material.GetColor("_TintColor");
+    }
+
+    public void SetMaxValue(float max)
+    {
+        maxValue = max;
+    }
+
+    public void SetCurrentValue(float current)
+    {
+        currentValve = current;
     }
 
     public Color GetColor()
@@ -32,21 +40,20 @@ public class Tube : MonoBehaviour
     /// </summary>
     public float GetPressure()
     {
-        return alpha;
+        return alphaPressure;
     }
 
     public void StopFlow()
     {
-        //isStopFlow = true;
         ParticleSystem.EmissionModule particleEmission = tubeFlow.emission;
         particleEmission.enabled = false;
     }
     void Update()
     {
         currentValve = Mathf.Clamp(currentValve, 0, maxValue);
-        alpha = currentValve / maxValue;
-        var emission = Mathf.Lerp(0, 150, alpha);
-        var size = Mathf.Lerp(0.2f, 1, alpha);
+        alphaPressure = currentValve / maxValue;
+        var emission = Mathf.Lerp(0, 150, alphaPressure);
+        var size = Mathf.Lerp(0.2f, 1, alphaPressure);
 
         ParticleSystem.EmissionModule particleEmission = tubeFlow.emission;
         ParticleSystem.MainModule particleMain =  tubeFlow.main;
