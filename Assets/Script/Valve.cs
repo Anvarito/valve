@@ -30,7 +30,7 @@ public class Valve : MonoBehaviour
                 float a0 = AngleBetweenVector2(valvePos, mousePosPrev);
                 float a1 = AngleBetweenVector2(valvePos, mousePos);
 
-                angle += a1 - a0; // for right valve += a1 - a0;
+                angle += a1 - a0; 
                 angle = Mathf.Clamp(angle, 0, MaxAngle);
                 print(angle);
                 rotator.rotation = Quaternion.Euler(new Vector3(rotator.rotation.z, angle, rotator.rotation.z));
