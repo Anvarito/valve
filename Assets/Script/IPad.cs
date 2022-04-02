@@ -32,7 +32,7 @@ public class IPad : MonoBehaviour
 
         var leftPersent = cistern.GetLeftTubePersent();
         var rightPersent = cistern.GetRightTubePersent();
-        greenText.text = "green: " + leftPersent + "%";
+        greenText.text = "blue: " + leftPersent + "%";
         blueText.text = "green: " + rightPersent + "%";
         var sum = leftPersent + rightPersent;
         totalText.text = "Total: " + sum + "%";
