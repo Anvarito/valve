@@ -13,6 +13,9 @@ public class IPad : MonoBehaviour
     public Valve leftValve;
     public Valve rightValve;
 
+    public Tube leftTube;
+    public Tube rightTube;
+
     [Header("Work process screen")]
     public GameObject workProcessPanel;
     public TextMeshPro greenText;
@@ -31,6 +34,10 @@ public class IPad : MonoBehaviour
     public TextMeshPro blueTotal;
     public TextMeshPro greenTotal;
 
+    public TextMeshPro rightGrabCount;
+    public TextMeshPro leftGrabCount;
+
+    public TextMeshPro gameTimer;
     private bool camShow = true;
     void Start()
     {
@@ -74,7 +81,7 @@ public class IPad : MonoBehaviour
         topViewCameraScreen.SetActive(camShow);
     }
 
-    public void ShowScoreBoard(bool goal, float persentGreen, float persentBlue)
+    public void ShowScoreBoard(bool goal, float persentGreen, float persentBlue, string timeElapsed)
     {
         model.SetActive(true);
         canvas.SetActive(true);
@@ -82,8 +89,16 @@ public class IPad : MonoBehaviour
         workProcessPanel.SetActive(false);
         topViewCameraScreen.SetActive(false);
 
+        leftTube.StopFlow();
+        rightTube.StopFlow();
+
         ScoreMessage.text = goal ? "success!" : "fail..";
         blueTotal.text = "blue: " + persentBlue;
         greenTotal.text = "green: " + persentGreen;
+
+        leftGrabCount.text = "blue valve grab count - " + leftValve.GetGrabCount();
+        rightGrabCount.text = "green valve grab count - " + rightValve.GetGrabCount();
+
+        gameTimer.text = "Time: " + timeElapsed;
     }
 }

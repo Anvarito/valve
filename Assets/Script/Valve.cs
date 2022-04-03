@@ -14,6 +14,7 @@ public class Valve : MonoBehaviour
 
     public float MaxAngle = 720;
 
+    private int grabCount = 0;
     void Start()
     {
         tube.SetMaxValue(MaxAngle);
@@ -22,6 +23,11 @@ public class Valve : MonoBehaviour
     public float GetValvePower()
     {
         return (float)Math.Round(angle / MaxAngle, 2);
+    }
+
+    public int GetGrabCount()
+    {
+        return grabCount;
     }
 
     void Update()
@@ -40,6 +46,10 @@ public class Valve : MonoBehaviour
                 angle = Mathf.Clamp(angle, 0, MaxAngle);
                 rotator.rotation = Quaternion.Euler(new Vector3(rotator.rotation.z, angle, rotator.rotation.z));
                 tube.SetCurrentValue(angle);
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                grabCount++;
             }
 
             mousePosPrev = mousePos;

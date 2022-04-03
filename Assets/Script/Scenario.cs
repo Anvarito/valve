@@ -15,13 +15,12 @@ public class Scenario : MonoBehaviour
     public Transform workIPadPos;
 
     private bool moveIPad = false;
+    private bool isInProcess = false;
     public Valve leftValve;
     public Valve rightValve;
 
-    public Tube leftTube;
-    public Tube rightTube;
-    private bool isComplete;
-
+    private float elapsedTime;
+    private string gameTimer;
     void Start()
     {
         player.DisableMovement();
@@ -38,8 +37,14 @@ public class Scenario : MonoBehaviour
                 moveIPad = false;
         }
 
-        if (!isComplete)
+        if (isInProcess)
+        {
+            elapsedTime += Time.deltaTime;
+            var timePlaying = TimeSpan.FromSeconds(elapsedTime);
+            gameTimer = timePlaying.ToString("mm':'ss'.'ff");
+
             GoalMonitoring();
+        }
     }
 
     private void GoalMonitoring()
@@ -48,14 +53,11 @@ public class Scenario : MonoBehaviour
 
         if ((cistern.GetTankFull() > 80 && bothValveStop) || cistern.GetTankFull() >= 100)
         {
-            isComplete = true;
-
-            leftTube.StopFlow();
-            rightTube.StopFlow();
+            isInProcess = false;
 
             bool goal = cistern.GetBlueRatio() <= 35 && cistern.GetBlueRatio() >= 25;
 
-            ipad.ShowScoreBoard(goal, cistern.GetGreenRatio(), cistern.GetBlueRatio());
+            ipad.ShowScoreBoard(goal, cistern.GetGreenRatio(), cistern.GetBlueRatio(), gameTimer);
         }
     }
 
@@ -75,5 +77,6 @@ public class Scenario : MonoBehaviour
         workProcessScreen.SetActive(true);
         //transform.localPosition = workIPadPos.localPosition;
         moveIPad = true;
+        isInProcess = true;
     }
 }
