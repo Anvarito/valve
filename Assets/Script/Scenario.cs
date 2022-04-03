@@ -9,7 +9,6 @@ public class Scenario : MonoBehaviour
     public SFPSC_PlayerMovement player;
     public Cistern cistern;
     public GameObject issueMessage;
-    public GameObject startButton;
     public GameObject workProcessScreen;
     private IPad ipad;
     public Transform workIPadPos;
@@ -73,9 +72,7 @@ public class Scenario : MonoBehaviour
     {
         player.EnableMovement();
         issueMessage.SetActive(false);
-        startButton.SetActive(false);
         workProcessScreen.SetActive(true);
-        //transform.localPosition = workIPadPos.localPosition;
         moveIPad = true;
         isInProcess = true;
     }
