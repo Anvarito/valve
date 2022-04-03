@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,11 @@ public class Valve : MonoBehaviour
         tube.SetMaxValue(MaxAngle);
     }
 
+    public float GetValvePower()
+    {
+        return (float)Math.Round(angle / MaxAngle, 2);
+    }
+
     void Update()
     {
         if (IsInWorkArea())
@@ -32,7 +38,6 @@ public class Valve : MonoBehaviour
 
                 angle += a1 - a0; 
                 angle = Mathf.Clamp(angle, 0, MaxAngle);
-                print(angle);
                 rotator.rotation = Quaternion.Euler(new Vector3(rotator.rotation.z, angle, rotator.rotation.z));
                 tube.SetCurrentValue(angle);
             }

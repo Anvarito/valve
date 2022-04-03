@@ -49,19 +49,6 @@ public class SFPSC_PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = this.GetComponent<Rigidbody>();
-
-        TryGetWallRun();
-        TryGetGrapplingHook();
-    }
-
-    public void TryGetWallRun()
-    {
-        this.TryGetComponent<SFPSC_WallRun>(out wallRun);
-    }
-
-    public void TryGetGrapplingHook()
-    {
-        this.TryGetComponent<SFPSC_GrapplingHook>(out grapplingHook);
     }
 
     private bool isGrounded = false;

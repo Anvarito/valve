@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class Cistern : MonoBehaviour
 
     private float leftPersent;
     private float rightPersent;
+    private float ratio;
 
     public Color currentColor;
     void Start()
@@ -39,6 +41,27 @@ public class Cistern : MonoBehaviour
     public int GetLeftTubePersent()
     {
         return Mathf.RoundToInt(leftPersent);
+    }
+
+    /// <summary>
+    /// 0 - 100 persents
+    /// </summary>
+    public int GetTankFull()
+    {
+        return GetLeftTubePersent() + GetRightTubePersent();
+    }
+
+    //ratio of green liquid to total liquid
+    public float GetGreenRatio()
+    {
+        return (float)Math.Round(ratio, 1);
+    }
+    //ratio of blue liquid to total liquid
+    public float GetBlueRatio()
+    {
+        if (GetTankFull() == 0)
+            return 0;
+        return (float)Math.Round(100 - ratio, 1);
     }
 
     void Update()
@@ -63,24 +86,30 @@ public class Cistern : MonoBehaviour
         leftPersent = leftAmount / maxWaterLevel * 100;
         rightPersent = rightAmount / maxWaterLevel * 100;
 
-        var currentSumPersent = leftPersent + rightPersent;
-
-        if (currentSumPersent >= 100)
+        if (GetTankFull() >= 100)
             tankIsFull = true;
 
-        var alphaBlend = leftPersent / currentSumPersent * 100;
+        ColorBlending();
+        CheckRatio();
+    }
+
+    private void ColorBlending()
+    {
+        var alphaBlend = leftPersent / GetTankFull() * 100;
         alphaBlend = Mathf.Clamp(alphaBlend, 0, 100);
-        
+
         Color blendColor = Color.Lerp(tubeRight.GetColor(), tubeLeft.GetColor(), alphaBlend / 100);
         Color newColor = new Color(blendColor.r, blendColor.g, blendColor.b, 0.8f);
         fluidMeshRenderer.material.color = newColor;
         currentColor = newColor;
-    }
 
-    public static Color CInterp(Color Current, Color Target, float DeltaTime, float InterpSpeed)
+    }
+    private void CheckRatio()
     {
-        if (InterpSpeed <= 0.0f) return Target;
-        float Alpha = Mathf.Clamp(DeltaTime * InterpSpeed, 0.0f, 1.0f);
-        return Color.Lerp(Current, Target, Alpha);
+        if (GetTankFull() == 0)
+            return;
+        float r = GetRightTubePersent();
+        float t = GetTankFull();
+        ratio = r / t * 100;
     }
 }
